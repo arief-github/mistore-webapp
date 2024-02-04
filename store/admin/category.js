@@ -7,6 +7,12 @@ export const state = () => ({
 export const mutations = {
   SET_CATEGORIES_DATA(state, payload) {
     state.categories = payload;
+  },
+  SET_PAGE(state, payload) {
+    state.page = payload;
+  },
+  SET_CATEGORY_DATA(state, payload) {
+    state.category = payload;
   }
 }
 
@@ -43,6 +49,21 @@ export const actions = {
         .catch(error => {
           reject(error);
         });
+    })
+  },
+  storeCategory({ dispatch, commit }, payload) {
+    return new Promise((resolve, reject) => {
+      // store to rest api "api/admin/categories" with method POST
+      this.$axios.post('api/admin/categories', payload)
+        .then(() => {
+          // dispatch action getCategoriesData
+          dispatch("getCategoriesData");
+
+          resolve()
+        })
+        .catch((error) => {
+          reject(error);
+        })
     })
   }
 }
