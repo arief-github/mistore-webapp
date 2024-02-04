@@ -161,7 +161,7 @@
         let image = this.product.image = e.target.files[0];
 
         // check file type
-        if(!image.type.match('image.*')) {
+        if(image && !image.type.match('image.*')) {
           // if fileType not allowed, then clear value and set null
           e.target.value = '';
 

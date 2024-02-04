@@ -16,9 +16,9 @@
                           <i class="fa fa-plus-circle"></i> ADD NEW PRODUCTS
                       </nuxt-link>
                     </div>
-                    <input type="text" class="form-control" placeholder="Cari berdasarkan nama product">
+                    <input type="text" v-model="search" @keypress.enter="searchData" class="form-control" placeholder="Cari berdasarkan nama product">
                     <div class="input-group-append">
-                      <button class="btn btn-warnin">
+                      <button class="btn btn-warning" @click="searchData">
                         <i class="fa fa-search"></i> SEARCH
                       </button>
                     </div>
@@ -29,11 +29,21 @@
                     <b-button :to="{name: 'admin-products-edit-id', params: {id: row.item.id}}" variant="info" size="sm">
                       EDIT
                     </b-button>
-                    <b-button variant="danger" size="sm">
+                    <b-button variant="danger" size="sm" @click="destroyProduct(row.item.id)">
                       DELETE
                     </b-button>
                   </template>
                 </b-table>
+
+                <b-pagination
+                  align="right"
+                  :value="products.current_page"
+                  :total-rows="products.total"
+                  :per-page="products.per_page"
+                  @change="changePage"
+                  aria-controls="my-table"
+                >
+                </b-pagination>
               </div>
             </div>
           </div>
@@ -73,7 +83,9 @@
             key: 'actions',
             tdClass: 'text-center'
           }
-        ]
+        ],
+        // data for hold text searching data
+        search: '',
       }
     },
     async asyncData({ store }) {
@@ -82,6 +94,51 @@
     computed: {
       products() {
         return this.$store.state.admin.product.products
+      }
+    },
+    methods: {
+      searchData() {
+        // commit to mutation SET_PAGE
+        this.$store.commit('admin/product/SET_PAGE', 1);
+
+        // dispatch to action "getProductsData"
+        this.$store.dispatch('admin/product/getProductsData', this.search);
+      },
+      changePage(page) {
+        // commit to mutation SET_PAGE
+        this.$store.commit("admin/product/SET_PAGE", page);
+
+        // dispatch on action getProductsData
+        this.$store.dispatch('admin/product/getProductsData', this.search);
+      },
+      destroyProduct(id) {
+        this.$swal.fire({
+          title: 'APAKAH ANDA YAKIN ? ',
+          text: 'UNTUK MENGHAPUS PRODUK INI !',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'YA, HAPUS!',
+          cancelButtonText: 'TIDAK',
+        })
+          .then((result) => {
+            if(result.isConfirmed) {
+              // if result is confirmed, dispatch action to deleteCategory vuex
+              this.$store.dispatch('admin/product/destroyProduct', id)
+                .then(() => {
+                  this.$nuxt.refresh();
+
+                  this.$swal.fire({
+                    title: 'BERHASIL!',
+                    text: 'Data Berhasil Dihapus!',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 2000
+                  })
+                })
+            }
+          })
       }
     }
   }
