@@ -18,9 +18,9 @@
                         <i class="fa fa-plus-circle"></i> ADD NEW
                       </nuxt-link>
                     </div>
-                    <input type="text" class="form-control" placeholder="cari berdasarkan nama category">
+                    <input type="text" v-model="search" @keypress.enter="searchData" class="form-control" placeholder="cari berdasarkan nama category">
                     <div class="input-group-append">
-                      <button class="btn btn-warning">
+                      <button class="btn btn-warning" @click="searchData">
                         <i class="fa fa-search"></i>SEARCH
                       </button>
                     </div>
@@ -31,6 +31,7 @@
                     <img :src="data.item.image" class="img-fluid" width="50" alt="category image" />
                   </template>
                 </b-table>
+                <b-pagination align="right" :total-rows="categories.total" :value="categories.current_page" :per-page="categories.per_page" @change="changePage" aria-controls="my-table"></b-pagination>
               </div>
             </div>
           </div>
@@ -65,7 +66,8 @@ export default {
           key: 'actions',
           tdClass: 'text-center'
         }
-      ]
+      ],
+      search: ''
     }
   },
   async asyncData({ store }) {
@@ -74,6 +76,22 @@ export default {
   computed: {
     categories() {
       return this.$store.state.admin.category.categories
+    }
+  },
+  methods: {
+    searchData() {
+      // commit to mutation SET_PAGE
+      this.$store.commit('admin/category/SET_PAGE', 1);
+
+      //dispatch on action "getCategoriesData"
+      this.$store.dispatch('admin/category/getCategoriesData', this.search);
+    },
+    changePage(page) {
+      // commit to mutation SET_PAGE based on params page
+      this.$store.commit('admin/category/SET_PAGE',page);
+
+      // dispatch on action "getCategoriesData"
+      this.$store.dispatch('admin/category/getCategoriesData', this.search);
     }
   }
 }
