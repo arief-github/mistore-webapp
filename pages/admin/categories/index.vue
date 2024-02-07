@@ -27,6 +27,15 @@
                   </div>
                 </div>
                 <b-table striped bordered hover :items="categories.data" :fields="fields" show-empty>
+                  <template v-slot:cell(actions)="row">
+                    <b-button :to="{name: 'admin-categories-edit-id', params: {id: row.item.id}}" variant="info" size="sm">
+                      EDIT
+                    </b-button>
+                    <b-button variant="danger" @click="destroyCategory(row.item.id)" size="sm">
+                      DELETE
+                    </b-button>
+                  </template>
+
                   <template v-slot:cell(image)="data">
                     <img :src="data.item.image" class="img-fluid" width="50" alt="category image" />
                   </template>
@@ -92,6 +101,35 @@ export default {
 
       // dispatch on action "getCategoriesData"
       this.$store.dispatch('admin/category/getCategoriesData', this.search);
+    },
+    destroyCategory(id) {
+      this.$swal.fire({
+        title: 'Apakah Anda yakin ?',
+        text: 'Ingin menghapus Kategori ini!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "YA! HAPUS",
+        cancelButtonText: "TIDAK"
+      })
+        .then((result) => {
+          if(result.isConfirmed) {
+            // if result is confirmed, dispatch action to deleteCategory vuex
+            this.$store.dispatch('admin/category/destroyCategory', id)
+              .then(() => {
+                this.$nuxt.refresh();
+
+                this.$swal.fire({
+                  title: 'Berhasil!',
+                  text: 'Data Category berhasil dihapus!',
+                  icon: 'success',
+                  showConfirmButton: false,
+                  timer: 2000
+                })
+              })
+          }
+        })
     }
   }
 }
