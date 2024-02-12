@@ -30,7 +30,24 @@
                   <template v-slot:cell(image)="data">
                     <img class="img-fluid" width="50" :src="data.item.image"/>
                   </template>
+                  <template v-slot:cell(actions)="row">
+                    <b-button :to="{name: 'admin-users-edit-id', params: {id: row.item.id}}" variant="info" size="sm">
+                      EDIT
+                    </b-button>
+                    <b-button variant="danger" @click="destroyUser(row.item.id)" size="sm">
+                      DELETE
+                    </b-button>
+                  </template>
                 </b-table>
+                <b-pagination
+                  align="right"
+                  :value="users.current_page"
+                  :total-rows="users.total"
+                  :per-page="users.per_page"
+                  @change="changePage"
+                  aria-controls="my-table"
+                >
+                </b-pagination>
               </div>
             </div>
           </div>
@@ -79,6 +96,41 @@ export default {
 
       // dispatch to action getUsersData
       this.$store.dispatch('admin/user/getUsersData', this.search)
+    },
+    changePage(page) {
+      // commit to mutation SET_PAGE
+      this.$store.commit('admin/user/SET_PAGE', page);
+
+      // dispatch on action getProductsData
+      this.$store.dispatch('admin/user/getUsersData');
+    },
+    destroyUser(id) {
+      this.$swal.fire({
+        title: "Apakah Anda Yakin?",
+        text: "Ingin menghapus Kategori ini!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "YA! HAPUS",
+        cancelButtonText: "TIDAK"
+      })
+        .then((result) => {
+          if(result.isConfirmed) {
+            this.$store.dispatch('admin/user/destroyUser', id)
+              .then(() => {
+                this.$nuxt.refresh();
+
+                this.$swal.fire({
+                  title: "Berhasil",
+                  text: 'Data User berhasil dihapus',
+                  icon: 'success',
+                  showConfirmButton: false,
+                  timer: 2000
+                })
+              })
+          }
+        })
     }
   }
 }

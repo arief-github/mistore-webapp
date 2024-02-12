@@ -34,7 +34,6 @@
                     </b-button>
                   </template>
                 </b-table>
-
                 <b-pagination
                   align="right"
                   :value="products.current_page"
