@@ -32,6 +32,7 @@
         <a
           href="#"
           class="c-header-nav-link"
+          data-toggle="dropdown"
           role="button"
           aria-haspopup="true"
           aria-expanded="false"
@@ -39,7 +40,7 @@
           <div class="c-avatar">
             <img
               class="c-avatar-img"
-              :src="`https://ui-avatars.com/api/?name=${user.name}&amp;background=4e73df;color=ffffff&amp;size=100`"
+              :src="`https://ui-avatars.com/api/?name=${user.name}&amp;background=4e73df&amp;color=ffffff&amp;size=100`"
             />
           </div>
         </a>
