@@ -1,22 +1,41 @@
 <template>
   <div class="container-fluid mt-custom">
-    <div id="mycarousel" class="carousel-slide" data-ride="carouserl" data-interval="4000">
+    <div
+      id="mycarousel"
+      class="carousel slide"
+      data-ride="carousel"
+      data-interval="4000"
+    >
       <div class="carousel-inner">
-          <div class="carousel-item" v-for="(slider, id) in sliders" :class="{active: id == 0}" :key="slider.id">
-            <a :href="slider.link" target="_blank">
-              <img :src="slider.image" class="d-block w-100 rounded">
-            </a>
-          </div>
-      </div>
-      <a href="#mycarousel" class="carousel-control-prev" role="button" data-slide="prev">
-        <div class="banner-icons">
-          <span class="fa fa-angle-left"></span>
+        <div
+          class="carousel-item"
+          v-for="(slider, id) in sliders"
+          :class="{ active: id==0 }"
+          :key="slider.id"
+        >
+          <a :href="slider.link" target="_blank">
+            <img :src="slider.image" class="d-block w-100 rounded" />
+          </a>
         </div>
+      </div>
+      <a
+        class="carousel-control-prev"
+        href="#mycarousel"
+        role="button"
+        data-slide="prev"
+      >
+        <div class="banner-icons"><span class="fa fa-angleleft"></span></div>
         <span class="sr-only">Previous</span>
       </a>
-      <a href="#mycarousel" class="carousel-control-next" role="button" data-slide="next">
+
+      <a
+        class="carousel-control-next"
+        href="#mycarousel"
+        role="button"
+        data-slide="next"
+      >
         <div class="banner-icons">
-          <span class="fa fa-angle-right"></span>
+          <span class="fa fa-angleright"></span>
         </div>
         <span class="sr-only">Next</span>
       </a>
@@ -38,6 +57,4 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
