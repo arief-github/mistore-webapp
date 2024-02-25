@@ -69,15 +69,24 @@
         </button>
         <div class="navbar-collapse collapse" id="dropdown6">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a href="#" class="nav-link" data-abc="true">
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle" data-abc="true" aria-expanded="false" data-toggle="dropdown">
                 <i class="fa fa-list-ul"></i> KATEGORI
               </a>
+              <div class="dropdown-menu">
+                <nuxt-link :to="{name: 'categories-slug', params: { slug: category.slug }}" class="dropdown-item" v-for="category in categories" :key="category.id">
+                  <img :src="category.image" width="50"/> {{ category.name }}
+                </nuxt-link>
+                <div class="dropdown-divider"></div>
+                <nuxt-link :to="{name: 'categories'}" class="dropdown-item active text-center" href="" data-abc="true">
+                  LIHAT SEMUA KATEGORI <i class="fa fa-long-arrow-alt-right"></i>
+                </nuxt-link>
+              </div>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link" data-abc="true">
+              <nuxt-link :to="{name: 'products'}" class="nav-link" data-abc="true">
                 <i class="fa fa-shopping-bag"></i> SEMUA PRODUK
-              </a>
+              </nuxt-link>
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link" data-abc="true">
@@ -110,12 +119,26 @@
 
 <script>
 export default {
-  name: "Header"
+  name: "Header",
+  async fetch() {
+    // fetching categories on REST API
+    await this.$store.dispatch('web/category/getCategoriesData')
+  },
+  computed: {
+    categories() {
+      return this.$store.state.web.category.categories
+    }
+  }
 }
 </script>
 
 <style scoped>
 .btn {
   font-size: initial;
+}
+
+.dropdown-menu {
+  max-height: 300px;
+  overflow-y: scroll;
 }
 </style>

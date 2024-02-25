@@ -22,7 +22,7 @@
               <div class="card-body bg-light-custom text-center rounded-bottom">
                 <div class="mb-2">
                   <h6 class="font-weight-semibold mb-2">
-                    <nuxt-link :to="{name: 'product-slug', params: {slug: product.slug}}" class="text-default mb-2" data-abc="true">
+                    <nuxt-link :to="{name: 'products-slug', params: {slug: product.slug}}" class="text-default mb-2" data-abc="true">
                       {{ product.title }}
                     </nuxt-link>
                   </h6>
