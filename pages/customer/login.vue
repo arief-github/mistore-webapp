@@ -90,6 +90,9 @@ export default {
         }
       })
         .then(() => {
+          this.$store.dispatch('web/cart/getCartsData');
+          this.$store.dispatch('web/cart/getCartWeight');
+
           this.$router.push({
             name: 'customer-dashboard'
           })
