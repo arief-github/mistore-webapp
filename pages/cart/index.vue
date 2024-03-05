@@ -81,12 +81,13 @@
                     </p>
                   </td>
                   <td
-                    class=" border-0text-right">&nbsp; :
+                    class=" border-0 text-right">&nbsp;&nbsp; :
                     Rp.</td>
                   <td
-                    class=" border-0text-right">
+                    class=" border-0 text-right">
                     <p
                       class="font-weight-bold m-0h5" align="right">
+                      {{ formatPrice(grandTotal) }}
                     </p>
                   </td>
                 </tr>
@@ -155,7 +156,6 @@
                     <!-- TIKI -->
                     <input class="form-check-input select-courier" type="radio" name="courier" id="ongkos_kirim-pos" value="pos" v-model="courier.courier_name" @change="showService">
                     <label for="ongkos_kirim-pos" class="form-check-label font-weight-bold mr-4">POS</label>
-
                   </div>
                 </div>
               </div>
@@ -164,7 +164,8 @@
                   <hr>
                   <label class="font-weight-bold">SERVICE KURIR</label>
                   <br>
-                  <div v-for="value in costs" :key="value.service" class="form-check form-check-inline" :value="value.cost[0].value+'|'+value.service" v-model="courier.courier_service_cost" @change="getServiceCost">
+                  <div v-for="value in costs" :key="value.service" class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="cost" :id="value.service" :value="value.cost[0].value+'|'+value.service" v-model="courier.courier_service_cost" @change="getServiceCost"/>
                     <label :for="value.service" class="form-check-label font-weight-normal mr-5">
                       {{ value.service }} - Rp. {{ formatPrice(value.cost[0].value) }}
                     </label>
@@ -179,6 +180,9 @@
                     Masukkan Alamat Lengkap
                   </div>
                 </div>
+              </div>
+              <div class="col-md-12" v-if="btnCheckout">
+                <button class="btn btn-warning btn-lg btn-block">CHECKOUT</button>
               </div>
             </div>
           </div>
