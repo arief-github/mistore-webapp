@@ -148,13 +148,13 @@
                   <br>
                   <div class="form-check form-check-inline">
                     <!-- JNE  -->
-                    <input class="form-check-input select-courier" type="radio" name="courier" id="ongkos_kirim-jne" value="jne" v-model="courier.courier_name" @change="showService">
+                    <input v-model="courier.courier_name"  class="form-check-input select-courier" type="radio" name="courier" id="ongkos_kirim-jne" value="jne"  @change="showService">
                     <label for="ongkos_kirim-jne" class="form-check-label font-weight-bold mr-4">JNE</label>
                     <!-- TIKI -->
-                    <input class="form-check-input select-courier" type="radio" name="courier" id="ongkos_kirim-tiki" value="tiki" v-model="courier.courier_name" @change="showService">
+                    <input v-model="courier.courier_name"  class="form-check-input select-courier" type="radio" name="courier" id="ongkos_kirim-tiki" value="tiki" @change="showService">
                     <label for="ongkos_kirim-tiki" class="form-check-label font-weight-bold mr-4">TIKI</label>
                     <!-- TIKI -->
-                    <input class="form-check-input select-courier" type="radio" name="courier" id="ongkos_kirim-pos" value="pos" v-model="courier.courier_name" @change="showService">
+                    <input v-model="courier.courier_name" class="form-check-input select-courier" type="radio" name="courier" id="ongkos_kirim-pos" value="pos" @change="showService">
                     <label for="ongkos_kirim-pos" class="form-check-label font-weight-bold mr-4">POS</label>
                   </div>
                 </div>
@@ -182,7 +182,7 @@
                 </div>
               </div>
               <div class="col-md-12" v-if="btnCheckout">
-                <button class="btn btn-warning btn-lg btn-block">CHECKOUT</button>
+                <button class="btn btn-warning btn-lg btn-block" @click.prevent="checkout">CHECKOUT</button>
               </div>
             </div>
           </div>
@@ -354,6 +354,54 @@ export default {
       this.grandTotal = parseInt(this.cartPrice) + parseInt(this.courier.courier_cost);
 
       this.btnCheckout = true;
+    },
+    async checkout() {
+      if(this.customer.name && this.customer.phone && this.customer.address && this.cartWeight) {
+        let formData = new FormData();
+
+        formData.append('courier', this.courier.courier_name);
+        formData.append('courier_service', this.courier.courier_service);
+        formData.append('courier_cost', this.courier.courier_service_cost);
+        formData.append('weight', this.cartWeight);
+        formData.append('name',this.customer.name);
+        formData.append('phone', this.customer.phone);
+        formData.append('address', this.customer.address);
+        formData.append('city_id', this.rajaOngkir.city_id);
+        formData.append('province_id', this.rajaOngkir.province_id);
+        formData.append('grand_total', this.grandTotal);
+
+        await this.$store.dispatch('web/checkout/storeCheckout', formData)
+          .then((response) => {
+            this.$swal.fire({
+              title: 'BERHASIL!',
+              text: 'Checkout Berhasil Dilakukan',
+              icon: 'success',
+              showConfirmButton: false,
+              timer: 2000
+            });
+
+            this.$router.push({
+              name: 'customer-invoices-show-snap_token',
+              params: {
+                snap_token: response.snap_token
+              }
+            })
+
+            console.log(response.snap_token)
+          })
+      }
+
+      if(!this.customer.name) {
+        this.validation.name = true
+      }
+
+      if(!this.customer.phone) {
+        this.validation.phone = true
+      }
+
+      if(!this.customer.address) {
+        this.validation.address = true
+      }
     }
   }
 }
